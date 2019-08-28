@@ -15,12 +15,15 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 //Express middle that serves up static files, takes in a root argument, which specifies the root directory from which to serve static files
 app.use(express.static(publicDirectoryPath))
 
-const message = 'Welcome!'
 
 io.on('connection', (socket) => {
     console.log('New WebSocket Connection')
 
-    socket.emit('message', message)
+    socket.emit('message', 'Welcome!')
+
+    socket.on('sendMessage', (message) => {
+        io.emit('message', message)
+    })
 })
 
 server.listen(port, () => {
