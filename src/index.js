@@ -2,6 +2,7 @@ const path = require('path')
 const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
+const Filter = require('bad-words')
 
 const app = express()
 //Created server because socketio() needs to pass in a raw http server in the argument
@@ -23,12 +24,20 @@ io.on('connection', (socket) => {
 
     socket.broadcast.emit('message', 'A new user has joined')
 
-    socket.on('sendMessage', (message) => {
+    socket.on('sendMessage', (message, callback) => {
+        const filter = new Filter
+
+        if (filter.isProfane(message)) {
+            return callback('Profantiy is not allowed')
+        }
+
         io.emit('message', message)
+        callback()
     })
 
-    socket.on('sendLocation', (location) => {
+    socket.on('sendLocation', (location, callback) => {
         io.emit('message', `https://google.com/maps?q=${location.lat},${location.long}`)
+        callback('Location Sent!')
     })
 
     socket.on('disconnect', () => {
