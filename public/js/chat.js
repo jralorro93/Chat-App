@@ -4,18 +4,32 @@ const socket = io()
 const $messageForm = document.querySelector('#message-form')
 const $messageFormInput = $messageForm.querySelector('input')
 const $messageFormButton = $messageForm.querySelector('button')
-
 const $locationButton = document.querySelector('#sendLocation')
+const $messages = document.querySelector('#messages')
 
-
+//Templates
+const messageTemplate = document.querySelector('#message-template').innerHTML
+const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML
+console.log('this is locationMessageTemplate', locationMessageTemplate)
 
 socket.on('message', (message) => {
     console.log(message)
+
+    //First argument renders the  script#messageTemplate
+    //Second argument renders the innerHTML of p
+    const html = Mustache.render(messageTemplate, {message})
+    $messages.insertAdjacentHTML ('beforeend', html)
+})
+
+socket.on('locationMessage', (url) => {
+    console.log(url)
+    const html = Mustache.render(locationMessageTemplate, {url})
+    $messages.insertAdjacentHTML('beforeend', html)
 })
 
 $messageForm.addEventListener('submit', (e) => {
     e.preventDefault()
-
+ 
     $messageFormButton.setAttribute('disabled', 'disabled')
 
     const message = e.target.elements.message.value
