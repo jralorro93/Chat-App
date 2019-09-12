@@ -20,10 +20,13 @@ app.use(express.static(publicDirectoryPath))
 
 io.on('connection', (socket) => {
     console.log('New WebSocket Connection')
+    
+    socket.on('join', ({username, room}) => {
+        socket.join(room)
+        socket.emit('message', generateMessage('Welcome'))
 
-    socket.emit('message', generateMessage('Welcome'))
-
-    socket.broadcast.emit('message', generateMessage('A new user has joined!'))
+        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined!`))
+    })
 
     socket.on('sendMessage', (message, callback) => {
         const filter = new Filter
@@ -40,6 +43,8 @@ io.on('connection', (socket) => {
         io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${location.lat},${location.long}`))
         callback('Location Sent!')
     })
+
+   
 
     socket.on('disconnect', () => {
         io.emit('message', generateMessage('A user has left.'))
