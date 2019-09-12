@@ -10,11 +10,12 @@ const $messages = document.querySelector('#messages')
 //Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
 const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML
-console.log('this is locationMessageTemplate', locationMessageTemplate)
+
+// Options
+
+const {username, room} = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 socket.on('message', (message) => {
-    console.log(message)
-
     //First argument renders the  script#messageTemplate
     //Second argument renders the innerHTML of p
     const html = Mustache.render(messageTemplate, { 
@@ -70,3 +71,5 @@ $locationButton.addEventListener('click', () => {
         })
     })
 })
+
+socket.emit('join', {username, room})
