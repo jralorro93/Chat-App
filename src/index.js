@@ -40,17 +40,20 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (message, callback) => {
         const filter = new Filter
+        const user = getUser(socket.id)
 
         if (filter.isProfane(message)) {
             return callback('Profantiy is not allowed')
         }
 
-        io.emit('message', generateMessage(message))
+        io.to(user.room).emit('message', generateMessage(message, user.username))
         callback()
     })
 
     socket.on('sendLocation', (location, callback) => {
-        io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${location.lat},${location.long}`))
+        const user = getUser(socket.id)
+
+        io.to(user.room).emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${location.lat},${location.long}`, user.username ))
         callback('Location Sent!')
     })
 
