@@ -20,6 +20,7 @@ socket.on('message', (message) => {
     //Second argument renders the innerHTML of p
     const html = Mustache.render(messageTemplate, { 
         message: message.text,
+        username: message.username,
         createdAt: moment(message.createdAt).format('h:mm a')
     })
     $messages.insertAdjacentHTML ('beforeend', html)
@@ -29,6 +30,7 @@ socket.on('locationMessage', (url) => {
     console.log(url)
     const html = Mustache.render(locationMessageTemplate, {
         url: url.url,
+        username: url.username,
         createdAt: moment(url.createdAt).format('h:mm a')
     })
     $messages.insertAdjacentHTML('beforeend', html)
