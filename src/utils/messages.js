@@ -1,4 +1,4 @@
-const generateMessage = (text, username ) => {
+const generateMessage = ( username, text) => {
     return {
         text,
         username,
@@ -6,7 +6,7 @@ const generateMessage = (text, username ) => {
     }
 }
 
-const generateLocationMessage = (url, username) => {
+const generateLocationMessage = ( username, url) => {
     return {
         url,
         username,
